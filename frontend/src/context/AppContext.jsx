@@ -6,6 +6,17 @@ const AppContext = createContext(null);
 export const AppProvider = ({ children }) => {
   const [currentScan, setCurrentScan] = useState(DEMO_PRESET_SCANS.noodle);
   const [demoMode, setDemoMode] = useState(true);
+  const [paymentHistory, setPaymentHistory] = useState([
+    {
+      txId: "TX-ALGO-TESTNET-88A92F1",
+      productName: "Crispy Instant Noodles (Masala Flavour)",
+      amount: "0.01",
+      network: "Algorand Testnet",
+      settledAt: "2026-08-28T10:15:00.000Z",
+      explorerUrl: "https://testnet.explorer.perawallet.app/tx/TX-ALGO-TESTNET-88A92F1"
+    }
+  ]);
+
   const [reportsList, setReportsList] = useState([
     {
       reportReference: "FV-2026-88102",
@@ -49,15 +60,6 @@ export const AppProvider = ({ children }) => {
       uploadDate: "2026-08-27",
       fileSize: "410 KB",
       previewUrl: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-      id: "EV-003",
-      fileName: "water_test_residue.jpg",
-      fileType: "Product Photo",
-      relatedReport: "FV-2026-88102",
-      uploadDate: "2026-08-27",
-      fileSize: "3.1 MB",
-      previewUrl: "https://images.unsplash.com/photo-1589927986089-35812388d1f4?auto=format&fit=crop&w=600&q=80"
     }
   ]);
 
@@ -65,8 +67,18 @@ export const AppProvider = ({ children }) => {
     name: "Radhika Sharma",
     awarenessScore: 88,
     scannedCount: 14,
-    savedProducts: 5
+    savedProducts: 5,
+    paidAnalysesCount: 1
   });
+
+  const addPaymentRecord = (record) => {
+    setPaymentHistory(prev => [record, ...prev]);
+    setUserProfile(prev => ({
+      ...prev,
+      paidAnalysesCount: prev.paidAnalysesCount + 1,
+      awarenessScore: Math.min(100, prev.awarenessScore + 4)
+    }));
+  };
 
   const addReport = (newReport, evidenceFiles = []) => {
     setReportsList(prev => [newReport, ...prev]);
@@ -74,19 +86,6 @@ export const AppProvider = ({ children }) => {
       ...prev,
       awarenessScore: Math.min(100, prev.awarenessScore + 5)
     }));
-
-    if (evidenceFiles && evidenceFiles.length > 0) {
-      const formattedEvidence = evidenceFiles.map((file, idx) => ({
-        id: `EV-${Date.now()}-${idx}`,
-        fileName: file.name || `evidence_${idx + 1}.jpg`,
-        fileType: file.type || "Product Evidence Photo",
-        relatedReport: newReport.reportReference,
-        uploadDate: new Date().toISOString().split('T')[0],
-        fileSize: `${(file.size / (1024 * 1024) || 1.5).toFixed(1)} MB`,
-        previewUrl: file.preview || "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80"
-      }));
-      setEvidenceVault(prev => [...formattedEvidence, ...prev]);
-    }
   };
 
   return (
@@ -96,6 +95,8 @@ export const AppProvider = ({ children }) => {
         setCurrentScan,
         demoMode,
         setDemoMode,
+        paymentHistory,
+        addPaymentRecord,
         reportsList,
         addReport,
         evidenceVault,

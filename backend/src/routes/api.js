@@ -12,9 +12,12 @@ import {
   getUserDashboard
 } from '../controllers/foodController.js';
 
+import premiumRoutes from './premiumRoutes.js';
+
 const router = express.Router();
 
-// Route definitions adhering to specification section 15
+// Route definitions adhering to specification section 15 & 4 (x402 Premium)
+router.use('/premium', premiumRoutes);
 router.post('/scan', scanFoodLabel);
 router.post('/analyze-label', analyzeLabelText);
 router.get('/products', getProducts);
