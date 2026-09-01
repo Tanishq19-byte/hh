@@ -8,8 +8,8 @@
     "backend"
   ],
   "scripts": {
-    "build": "cd frontend && npm install && npm run build && cd .. && node -e \"const fs = require('fs'); fs.cpSync('frontend/dist', 'dist', {recursive: true}); console.log('Successfully copied dist output to root');\"",
-    "dev": "cd frontend && npm run dev",
-    "start": "cd backend && npm start"
+    "build": "npm run build --workspace=frontend && node -e \"const fs = require('fs'); fs.cpSync('frontend/dist', 'dist', {recursive: true}); console.log('Successfully copied dist output to root');\"",
+    "dev": "npm run dev --workspace=frontend",
+    "start": "npm start --workspace=backend"
   }
 }
