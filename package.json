@@ -1,0 +1,15 @@
+{
+  "name": "foodvigil-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FoodVigil — AI Consumer Food Safety & Transparency Platform",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "dev": "cd frontend && npm run dev",
+    "start": "cd backend && npm start"
+  }
+}
